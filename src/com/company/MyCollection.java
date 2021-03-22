@@ -13,24 +13,12 @@ class MyCollection<E> implements Collection<E> {
 
     @Override
     public boolean add(final E e) {
-        try {
-            if (size == elementData.length) {
-                final float addLen = 1.5f;
-                elementData = Arrays.copyOf(elementData, (int) (size * addLen));
-            }
-            elementData[size++] = e;
-            return true;
-        } catch (UnsupportedOperationException unsupportedOperationException) {
-            throw new UnsupportedOperationException();
-        } catch (ClassCastException classCastException) {
-            throw new ClassCastException();
-        } catch (NullPointerException nullPointerException) {
-            throw new NullPointerException();
-        } catch (IllegalArgumentException illegalArgumentException) {
-            throw new IllegalArgumentException();
-        } catch (IllegalStateException illegalStateException) {
-            throw new IllegalStateException();
+        if (size == elementData.length) {
+            final float addLen = 1.5f;
+            elementData = Arrays.copyOf(elementData, (int) (size * addLen));
         }
+        elementData[size++] = e;
+        return true;
     }
 
     @Override
@@ -50,26 +38,20 @@ class MyCollection<E> implements Collection<E> {
 
     @Override
     public boolean contains(final Object o) {
-        try {
-            if (o != null) {
-                for (int i = 0; i < size; i++) {
-                    if (o.equals(elementData[i])) {
-                        return true;
-                    }
-                }
-            } else {
-                for (int i = 0; i < size; i++) {
-                    if (elementData[i] == null) {
-                        return true;
-                    }
+        if (o != null) {
+            for (int i = 0; i < size; i++) {
+                if (o.equals(elementData[i])) {
+                    return true;
                 }
             }
-            return false;
-        } catch (ClassCastException classCastException) {
-            throw new ClassCastException();
-        } catch (NullPointerException nullPointerException) {
-            throw new NullPointerException();
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (elementData[i] == null) {
+                    return true;
+                }
+            }
         }
+        return false;
     }
 
     @Override
@@ -80,157 +62,104 @@ class MyCollection<E> implements Collection<E> {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T[] toArray(final T[] a) {
-        try {
-            if (a.length < size) {
-                return (T[]) Arrays.copyOf(elementData, size, a.getClass());
-            }
-            System.arraycopy(elementData, 0, a, 0, size);
-            return a;
-        } catch (ArrayStoreException arrayStoreException) {
-            throw new ArrayStoreException();
-        } catch (NullPointerException nullPointerException) {
-            throw new NullPointerException();
+        if (a.length < size) {
+            return (T[]) Arrays.copyOf(elementData, size, a.getClass());
         }
+        System.arraycopy(elementData, 0, a, 0, size);
+        return a;
     }
 
     @Override
     public boolean remove(final Object o) {
-        try {
-            if (o != null) {
-                for (int i = 0; i < size; i++) {
-                    if (o.equals(elementData[i])) {
-                        if (size - i - 1 > 0) {
-                            System.arraycopy(elementData, i + 1, elementData, i, size - i - 1);
-                        }
-                        size--;
-                        elementData[size] = null;
-                        return true;
+        if (o != null) {
+            for (int i = 0; i < size; i++) {
+                if (o.equals(elementData[i])) {
+                    if (size - i - 1 > 0) {
+                        System.arraycopy(elementData, i + 1, elementData, i, size - i - 1);
                     }
-                }
-            } else {
-                for (int i = 0; i < size; i++) {
-                    if (elementData[i] == null) {
-                        if (size - i - 1 > 0) {
-                            System.arraycopy(elementData, i + 1, elementData, i, size - i - 1);
-                        }
-                        size--;
-                        elementData[size] = null;
-                        return true;
-                    }
+                    size--;
+                    elementData[size] = null;
+                    return true;
                 }
             }
-            return false;
-        } catch (ClassCastException classCastException) {
-            throw new ClassCastException();
-        } catch (NullPointerException nullPointerException) {
-            throw new NullPointerException();
-        } catch (UnsupportedOperationException unsupportedOperationException) {
-            throw new UnsupportedOperationException();
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (elementData[i] == null) {
+                    if (size - i - 1 > 0) {
+                        System.arraycopy(elementData, i + 1, elementData, i, size - i - 1);
+                    }
+                    size--;
+                    elementData[size] = null;
+                    return true;
+                }
+            }
         }
+        return false;
     }
 
     @Override
     public boolean containsAll(final Collection<?> c) {
-        try {
-            for (Object o : c) {
-                if (!contains(o)) {
-                    return false;
-                }
+        for (Object o : c) {
+            if (!contains(o)) {
+                return false;
             }
-            return true;
-        } catch (ClassCastException classCastException) {
-            throw new ClassCastException();
-        } catch (NullPointerException nullPointerException) {
-            throw new NullPointerException();
         }
+        return true;
     }
 
     @Override
     public boolean addAll(final Collection<? extends E> c) {
-        try {
-            Object[] arr = c.toArray();
-            System.arraycopy(arr, 0, elementData, size, arr.length);
-            size += arr.length;
-            return arr.length != 0;
-        } catch (UnsupportedOperationException unsupportedOperationException) {
-            throw new UnsupportedOperationException();
-        } catch (ClassCastException classCastException) {
-            throw new ClassCastException();
-        } catch (NullPointerException nullPointerException) {
-            throw new NullPointerException();
-        } catch (IllegalArgumentException illegalArgumentException) {
-            throw new IllegalArgumentException();
-        } catch (IllegalStateException illegalStateException) {
-            throw new IllegalStateException();
+        boolean result = false;
+        for (E e : c) {
+            add(e);
+            result = true;
         }
+        return result;
     }
 
     @Override
     public boolean removeAll(final Collection<?> c) {
-        try {
-            int len = 0;
-            boolean modified = false;
-            for (int i = 0; i < size; i++) {
-                if (!c.contains(elementData[i])) {
-                    elementData[len] = elementData[i];
-                    len++;
-                }
+        boolean result = false;
+        for (Object o : c) {
+            if (remove(o)) {
+                result = true;
             }
-            if (len != size) {
-                for (int i = len; i < size; i++) {
-                    elementData[i] = null;
-                }
-                size = len;
-                modified = true;
-            }
-            return modified;
-        } catch (UnsupportedOperationException unsupportedOperationException) {
-            throw new UnsupportedOperationException();
-        } catch (ClassCastException classCastException) {
-            throw new ClassCastException();
-        } catch (NullPointerException nullPointerException) {
-            throw new NullPointerException();
         }
+        return result;
     }
 
     @Override
     public boolean retainAll(final Collection<?> c) {
-        try {
-            int len = 0;
-            boolean modified = false;
-            for (int i = 0; i < size; i++) {
-                if (c.contains(elementData[i])) {
+        int len = 0;
+        boolean modified = false;
+        for (int i = 0; i < size; i++) {
+            for (Object o : c) {
+                if (o == null & elementData[i] == null) {
+                    elementData[len] = elementData[i];
+                    len++;
+                } else if (o != null && o.equals(elementData[i])) {
                     elementData[len] = elementData[i];
                     len++;
                 }
             }
-            if (len != size) {
-                for (int i = len; i < size; i++) {
-                    elementData[i] = null;
-                }
-                size = len;
-                modified = true;
-            }
-            return modified;
-        } catch (UnsupportedOperationException unsupportedOperationException) {
-            throw new UnsupportedOperationException();
-        } catch (ClassCastException classCastException) {
-            throw new ClassCastException();
-        } catch (NullPointerException nullPointerException) {
-            throw new NullPointerException();
         }
+        if (len != size) {
+            for (int i = len; i < size; i++) {
+                elementData[i] = null;
+            }
+            size = len;
+            modified = true;
+        }
+
+        return modified;
     }
 
     @Override
     public void clear() {
-        try {
-            for (int i = 0; i < size; i++) {
-                elementData[i] = null;
-            }
-            size = 0;
-        } catch (UnsupportedOperationException unsupportedOperationException) {
-            throw new UnsupportedOperationException();
+        for (int i = 0; i < size; i++) {
+            elementData[i] = null;
         }
+        size = 0;
     }
 
     private class MyIterator<T> implements Iterator<T> {
@@ -269,7 +198,7 @@ class MyCollection<E> implements Collection<E> {
                 size--;
                 wasNext = false;
             } catch (UnsupportedOperationException unsupportedOperationException) {
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("remove");
             }
         }
     }
