@@ -121,8 +121,8 @@ class MyCollection<E> implements Collection<E> {
     public boolean removeAll(final Collection<?> c) {
         boolean result = false;
         for (Object o : c) {
-            if (remove(o)) {
-                result = true;
+            while (this.contains(o)) {
+                result = this.remove(o);
             }
         }
         return result;
@@ -187,15 +187,8 @@ class MyCollection<E> implements Collection<E> {
                 if (cursor == 0 || !wasNext) {
                     throw new IllegalStateException();
                 }
-                elementData[cursor - 1] = null;
-                for (int i = 0, j = 0; i < size; i++) {
-                    if (elementData[i] != null) {
-                        elementData[j] = elementData[i];
-                        j++;
-                    }
-                }
+                MyCollection.this.remove(elementData[cursor - 1]);
                 cursor--;
-                size--;
                 wasNext = false;
             } catch (UnsupportedOperationException unsupportedOperationException) {
                 throw new UnsupportedOperationException("remove");
